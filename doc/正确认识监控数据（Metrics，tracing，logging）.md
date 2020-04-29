@@ -12,7 +12,7 @@
 
 总体说来，我觉得我们是在一些通用的名词间纠结。我想我们可以通过图表来定义监控的作用域，使各名词的作用范围更明确。 我们使用维恩图（Venn diagram）来描述Metrics, tracing, logging三个概念的定义。他们三者在某些情况下是重叠的，但是我尽量尝试定义他们的不同。如下图所示：
 
-![640?wx_fmt=png&wxfrom=5&wx_lazy=1](https://ss.csdn.net/p?http://mmbiz.qpic.cn/mmbiz_png/gak2lhVxV6KBxvJXcYALaE5g3QIfS7tmnZn9fIE0GygBT9M2EhiaQF9coBrCV8Vpeic4NaoUIFdWSNfuVhDuMaIw/640?wx_fmt=png&wxfrom=5&wx_lazy=1)
+![JoAzkt.png](https://s1.ax1x.com/2020/04/29/JoAzkt.png)
 
 Metric的特点是，它是可累加的：他们具有原子性，每个都是一个逻辑计量单元，或者一个时间段内的柱状图。 例如：队列的当前深度可以被定义为一个计量单元，在写入或读取时被更新统计； 输入HTTP请求的数量可以被定义为一个计数器，用于简单累加； 请求的执行时间可以被定义为一个柱状图，在指定时间片上更新和统计汇总。
 
@@ -24,7 +24,7 @@ tracing的最大特点就是，它在单次请求的范围内，处理信息。 
 
 根据上述的定义，我们可以标记上图的重叠部分。
 
-![640?wx_fmt=png](https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_png/gak2lhVxV6KBxvJXcYALaE5g3QIfS7tmGOjHcicXLnEjPiaaGSKo0qNaBrMXdKiaxa2SekrbPicBLhj8rgY6u0y7GQ/640?wx_fmt=png)
+![JoEStP.png](https://s1.ax1x.com/2020/04/29/JoEStP.png)
 
 当然，大量的被监控的应用是具有分布式能力(Cloud-native)的应用，逻辑处理在单次请求的范围内完成。因此，讨论追踪的上下文是有意义的。 但是，我们注意到，并不是所有的监控系统都绑定在请求的生命周期上的。他们可能是逻辑组件诊断信息、处理过程的生命周期明细信息，这些信息和任何离散的请求时正交关系。 所以，不是所有的metric和log都可以被塞进追踪系统的概念中，至少在不经过数据加工处理是不行的。又或者，我们可能发觉使用metric统计数据，对应用监控有很大帮助，例如prometheus生态，可以量化的实时展现应用视图；相应的，如果我们将metric统计数据强行使用针对log的管道来处理，将使我们丢失很多特性。
 
@@ -32,7 +32,7 @@ tracing的最大特点就是，它在单次请求的范围内，处理信息。 
 
 另外，我发现通过维恩图的方式展现三者关系时，会正巧展现出一个附加效应。在这三个功能域中，metric倾向于更节省资源，因为他会“天然的”压缩数据。相反，日志倾向于无限增加的，会频繁的超出预期的容量。（有另一篇我写的关于这方面的文章，查看，译者注：未翻译）。所以，我们可以在图上，绘制出容量的需求趋势，metrics低到logging高， 而trace可能处于他们两的中间位置
 
-![640?wx_fmt=png](https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_png/gak2lhVxV6KBxvJXcYALaE5g3QIfS7tm41k5Zc0ehPAYKcic1Toic5FbiadXxXv8mibltZSp3qNhIEyE2LySNv5pfw/640?wx_fmt=png)
+![JoAvTI.png](https://s1.ax1x.com/2020/04/29/JoAvTI.png)
 
 也许，这不是最完美的方式描述这三者的管理，但我从会议现场收到的反馈来看，这个分类还是相当不错的：随着三者的关系越清晰，我们越容易建设性的讨论其他问题。如果你尝试对产品的功能进行定位，你可能也需要这张图，在讨论中，澄清产品的位置。
 
